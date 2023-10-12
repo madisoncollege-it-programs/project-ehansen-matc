@@ -33,6 +33,26 @@ print(intro)                                                #prints the intro va
 #         outputFile.close()                                      #close the file so we dont have an error with it still being open 
 #         print(f"{logList[0]} - {logList[8]}")                   #prints the same data put in the new file to the terminal
 """ ----Milestone 5---- """
+# import sys                                                              #Makes it so we can use an argument when starting the script
+# varAnswers = ["y", "yes", "yeah"]                                       #List of answers that will continue the code
+# if len(sys.argv) > 1:                                                   #Checks if the user input any argument 
+#     userResponse = sys.argv[1]                                          #Takes the argument and stores it as userResponse
+# else:
+#     userResponse = input("Would you like to continue?\n>>")             #If no argument was there, asks for a value for userResponse
+# if userResponse.lower() in varAnswers:                                  #Checks if any of the accepted answers in varAnswers was given
+#     with open("m5-access.txt" , "r") as logString:                  
+#         logList = logString.readlines()                             
+#         for element in logList:                
+#             logList = element.split(' ')
+#             if int(logList[8]) >= 500:                                  #Takes the integer value of the 8th element in logList and makes sure its at or above 500 before writing it to the file.           
+#                 outputFile = open("apache_analysis.txt" , "a")           
+#                 outputFile.write(f"{logList[0]} - {logList[8]} \n")      
+#                 outputFile.close()
+#             elif int(logList[8]) >= 400:                                  #Takes the integer value of the 8th element in logList and makes sure its at or above 400 before writing it to the file. 
+#                 print(f"{logList[0]} - {logList[8]}")                 
+# else:
+#     print("You chose not to continue")
+""" ----Milestone 6----"""
 import sys                                                              #Makes it so we can use an argument when starting the script
 varAnswers = ["y", "yes", "yeah"]                                       #List of answers that will continue the code
 if len(sys.argv) > 1:                                                   #Checks if the user input any argument 
@@ -41,15 +61,25 @@ else:
     userResponse = input("Would you like to continue?\n>>")             #If no argument was there, asks for a value for userResponse
 if userResponse.lower() in varAnswers:                                  #Checks if any of the accepted answers in varAnswers was given
     with open("m5-access.txt" , "r") as logString:                  
-        logList = logString.readlines()                             
+        logList = logString.readlines()
+        apache_log_summary = {}                           
         for element in logList:                
             logList = element.split(' ')
-            if int(logList[8]) >= 500:                                  #Takes the integer value of the 8th element in logList and makes sure its at or above 500 before writing it to the file.           
-                outputFile = open("apache_analysis.txt" , "a")           
-                outputFile.write(f"{logList[0]} - {logList[8]} \n")      
-                outputFile.close()
-            if int(logList[8]) >= 400:                                  #Takes the integer value of the 8th element in logList and makes sure its at or above 400 before writing it to the file. 
-                print(f"{logList[0]} - {logList[8]}")                 
+            logIP = logList[0]                                          #I added these variables to make it faster to type rather than continue picking an element out of a list 
+            logHTML = logList[8]                                        #^^^
+            ipCount = 0                                                 #A starting value each time it looks at the next elemnt in the list for how many times an ip address shows up 
+            if logIP in apache_log_summary:                             #checks if the IP is already in the dictionary 
+                apache_log_summary[logIP] += 1                          #if it is add 1 to its value (showing number of occurrences)
+            else:                                                       #if its not put the ip as a key in the dictionary and add 1 to it s value 
+                ipCount += 1 
+                apache_log_summary[logIP] = ipCount
+    #print(apache_log_summary)
+            if int(logHTML) >= 400:                                     #Takes the integer value of the 8th element in logList and makes sure its at or above 400 before writing it to the file. 
+                print(f"{logIP} - {logHTML}")
+    for vKey , vValue in apache_log_summary.items():                    #After its done adding to the dict, loop through the dict for each item 
+        outputFile = open("apache_analysis.txt" , "a")
+        if vValue >= 5:                                                 #if the number of times that the IP address tried to contact us was greater than 5...
+            outputFile.write(f"{vKey} has {vValue}\n")                  #...add it to the analysis file
+        outputFile.close()                  
 else:
     print("You chose not to continue")
-    
