@@ -6,80 +6,40 @@ Description: This code helps parse through apache log files to make them easier 
 """
 
 intro = "This script will help you read and analyze apache log files"
-# with open("apache_logs.txt" , "r") as logString:            
-    # apacheLogs = logString.read()                           #this is the replacement string variable for Milestone 4 so I have it pulled from a file
-""" ----Milestone 1---- """
-print(intro)                                                #prints the intro variable
-#userResponse = input("Would you like to continue? (y/n)")   #takes input from the user and stores it as a variable 
-#print(f"You responded: {userResponse}")                     #prints off whatever the the user enters
-""" ----Milestone 2---- """                                                  #all of this below is for a single log 
-# apacheIP = apacheLogs[0:15]                                  #takes the first 15 characters out of the apacheLog variable and makes a new variable (apacheIP)
-# logList = apacheLogs.split(' ')                              #turns apacheLog into a list with each element being after a space
-# print(f"Log Request from: {apacheIP:*^22}")                 #formatted string to get just the ip surrounded by *
-# print(f"Return code: {logList[8]}")                         #prints the 9th element in the list (0 being included)
-""" ----Milestone 3---- """
-# logList = apacheLogs.split('\n')                               #this turns each log into a element in a list that are seperated by a new line 
-# for element in logList:                                        #this is a loop that goes through each element in the list and stores them as "element" 
-#     apacheIP = element[0:15]                                   #similar to milestone 2 except it takes out each individual log
-#     logList = element.split(' ')                               #need to change the variable name because its no longer a single log its an element in the list
-#     print(f"{apacheIP} - {logList[8]}")
-""" ----Milestone 4---- """
-# with open("apache_logs.txt" , "r") as logString:                #this opens the file for reading only so I can take from the file without changing it 
-#     logList = logString.readlines()                             #readlines() turns the whole string data type file into a list data type and saves it as logList
-#     for element in logList:                                     #a loop for going through everything inside the logs.txt file
-#         logList = element.split(' ')                            #still need to split each log by a space so I can get just the IP and the HTTP return code
-#         outputFile = open("apache_analysis.txt" , "a")          #this will open the new file for appending so I can have a new line each time it goes through and can put it in the file without changing the original 
-#         outputFile.write(f"{logList[0]} - {logList[8]} \n")     #this takes the logList variable and puts the IP and HTTP code into the new analysis file and creates a new line to put the next underneath 
-#         outputFile.close()                                      #close the file so we dont have an error with it still being open 
-#         print(f"{logList[0]} - {logList[8]}")                   #prints the same data put in the new file to the terminal
-""" ----Milestone 5---- """
-# import sys                                                              #Makes it so we can use an argument when starting the script
-# varAnswers = ["y", "yes", "yeah"]                                       #List of answers that will continue the code
-# if len(sys.argv) > 1:                                                   #Checks if the user input any argument 
-#     userResponse = sys.argv[1]                                          #Takes the argument and stores it as userResponse
-# else:
-#     userResponse = input("Would you like to continue?\n>>")             #If no argument was there, asks for a value for userResponse
-# if userResponse.lower() in varAnswers:                                  #Checks if any of the accepted answers in varAnswers was given
-#     with open("m5-access.txt" , "r") as logString:                  
-#         logList = logString.readlines()                             
-#         for element in logList:                
-#             logList = element.split(' ')
-#             if int(logList[8]) >= 500:                                  #Takes the integer value of the 8th element in logList and makes sure its at or above 500 before writing it to the file.           
-#                 outputFile = open("apache_analysis.txt" , "a")           
-#                 outputFile.write(f"{logList[0]} - {logList[8]} \n")      
-#                 outputFile.close()
-#             elif int(logList[8]) >= 400:                                  #Takes the integer value of the 8th element in logList and makes sure its at or above 400 before writing it to the file. 
-#                 print(f"{logList[0]} - {logList[8]}")                 
-# else:
-#     print("You chose not to continue")
-""" ----Milestone 6----"""
-import sys                                                              #Makes it so we can use an argument when starting the script
-varAnswers = ["y", "yes", "yeah"]                                       #List of answers that will continue the code
-if len(sys.argv) > 1:                                                   #Checks if the user input any argument 
-    userResponse = sys.argv[1]                                          #Takes the argument and stores it as userResponse
-else:
-    userResponse = input("Would you like to continue?\n>>")             #If no argument was there, asks for a value for userResponse
-if userResponse.lower() in varAnswers:                                  #Checks if any of the accepted answers in varAnswers was given
-    with open("m5-access.txt" , "r") as logString:                  
-        logList = logString.readlines()
-        apache_log_summary = {}                           
-        for element in logList:                
-            logList = element.split(' ')
-            logIP = logList[0]                                          #I added these variables to make it faster to type rather than continue picking an element out of a list 
-            logHTML = logList[8]                                        #^^^
-            ipCount = 0                                                 #A starting value each time it looks at the next elemnt in the list for how many times an ip address shows up 
-            if logIP in apache_log_summary:                             #checks if the IP is already in the dictionary 
-                apache_log_summary[logIP] += 1                          #if it is add 1 to its value (showing number of occurrences)
-            else:                                                       #if its not put the ip as a key in the dictionary and add 1 to it s value 
-                ipCount += 1 
-                apache_log_summary[logIP] = ipCount
-    #print(apache_log_summary)
-            if int(logHTML) >= 400:                                     #Takes the integer value of the 8th element in logList and makes sure its at or above 400 before writing it to the file. 
-                print(f"{logIP} - {logHTML}")
-    for vKey , vValue in apache_log_summary.items():                    #After its done adding to the dict, loop through the dict for each item 
-        outputFile = open("apache_analysis.txt" , "a")
-        if vValue >= 5:                                                 #if the number of times that the IP address tried to contact us was greater than 5...
-            outputFile.write(f"{vKey} has {vValue}\n")                  #...add it to the analysis file
+print(intro)                                                                #prints the intro variable
+""" ----Milestone 7---- """
+def ParseLogEntry(logParse):                                                #defines the new function to be used in the code
+    lineList = logParse.split(' ')                                          #these three lines are the same from previous milestones
+    logIP = lineList[0]                                                     #^^^ this is a local variable (used only in the function)
+    logHTML = lineList[8]                                                   #^^^
+    return logIP , logHTML                                                  #returns both the variables logIP and logHTML to be used ouside the function
+
+def main():                                                                 #this turns the whole script into a function 
+    import sys                                                              #Makes it so we can use an argument when starting the script
+    varAnswers = ["y", "yes", "yeah"]                                       #List of answers that will continue the code
+    if len(sys.argv) > 1:                                                   #Checks if the user input any argument 
+        userResponse = sys.argv[1]                                          #Takes the argument and stores it as userResponse
+    else:
+        userResponse = input("Would you like to continue?\n>>")             #If no argument was there, asks for a value for userResponse
+    if userResponse.lower() in varAnswers:                                  #Checks if any of the accepted answers in varAnswers was given
+        with open("m5-access.txt" , "r") as logString:                      #opens up an outside file to read called m5-access.txt
+            logList = logString.readlines()                                 #makes a list of each line out of the used file
+            apache_log_summary = {}                                         #creates a dictionary 
+            for line in logList:                
+                logIP , logHTML = ParseLogEntry(line)                       #uses the function to go through each line and takes the two variables that were returned from the ParseLogEntry function then applies them as global variables                                            
+                if logIP in apache_log_summary:                             #checks if the IP is already in the dictionary 
+                    apache_log_summary[logIP] += 1                          #if it is add 1 to its value (showing number of occurrences)
+                else:                                                       #if its not put the ip as a key in the dictionary and make its value 1
+                    apache_log_summary[logIP] = 1
+                if int(logHTML) >= 400:                                     #checks if the integer value of logHTML is greater than or at 400
+                    print(f"{logIP} - {logHTML}")                           #if it is, prinits out the IP and the HTML code seprated by a dash 
+        outputFile = open("apache_analysis.txt" , "w")                      #opens the analysis file outside the for loop so it doesnt only return the last entry
+        for vKey , vValue in apache_log_summary.items():                    #After its done adding to the dict, loop through the dict for each item 
+            if vValue >= 5:                                                 #if the number of times that the IP address tried to contact us was greater than 5...
+                outputFile.write(f"{vKey} has {vValue}\n")                  #...add it to the analysis file
         outputFile.close()                  
-else:
-    print("You chose not to continue")
+    else:                                                                   #if the input at the start of the script doesnt match anything...
+        print("You chose not to continue")                                  #...print this and end the script
+
+if __name__ == '__main__':                                                  #this tests the __name__ variable if the script is being run directly. 
+    main()                                                                  #if it is than run the whole main function
